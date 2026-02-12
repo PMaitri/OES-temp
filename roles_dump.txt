@@ -1,0 +1,47 @@
+[
+  {
+    "id": "6103b091-f1ab-41e3-bde4-87b73384dda8",
+    "role": "admin",
+    "username": "admin"
+  },
+  {
+    "id": "a12d53ae-53d2-4acf-80ca-3b5174e45186",
+    "role": "student",
+    "username": "Diya"
+  },
+  {
+    "id": "dd276ec1-1aed-4e9b-9f20-ae6f0e4a84ba",
+    "role": "student",
+    "username": "maitri1"
+  },
+  {
+    "id": "af314205-8e7c-4665-a44c-8cd36f78afbe",
+    "role": "teacher",
+    "username": "Divya"
+  },
+  {
+    "id": "c9663003-0fc6-4167-ae8d-f1f00fed8635",
+    "role": "student",
+    "username": "kp"
+  },
+  {
+    "id": "b09f1c70-f8c3-4b60-8b7e-138800e3ff8c",
+    "role": "student",
+    "username": "maitri12"
+  },
+  {
+    "id": "0d8d41d7-fb03-4fb8-9b95-c11aaf7d0855",
+    "role": "teacher",
+    "username": "teacher2"
+  },
+  {
+    "id": "f84566e3-2aa5-4055-8339-60f73d6df7b4",
+    "role": "student",
+    "username": "john"
+  },
+  {
+    "id": "180f7569-4595-456c-a552-a307d47fac7d",
+    "role": "teacher",
+    "username": "teacher@34"
+  }
+]

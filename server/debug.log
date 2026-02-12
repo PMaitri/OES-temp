@@ -1,0 +1,277 @@
+--- DB DEBUG 2 ---
+Student: Maitri (dd276ec1-1aed-4e9b-9f20-ae6f0e4a84ba)
+Student: Maitri patel (b09f1c70-f8c3-4b60-8b7e-138800e3ff8c)
+Enrollment: Student b09f1c70-f8c3-4b60-8b7e-138800e3ff8c -> Class f1401a28-4032-4417-ace3-6ddd2b39c2be (Roll: 12)
+Enrollment: Student dd276ec1-1aed-4e9b-9f20-ae6f0e4a84ba -> Class f1401a28-4032-4417-ace3-6ddd2b39c2be (Roll: 2)
+Class: Class 3 (ef5e7097-1952-42d1-8869-0734c35366c3)
+Class: Class 9 (50a6f8ea-630d-4a9f-ab4a-42bb34359c25)
+Class: Class 9 (186ba821-5242-4378-94c3-3d4fe6342d72)
+Class: Class 10 (6ba527af-c446-4fc8-958e-41ef4bc2a646)
+Class: Class 10 (f1401a28-4032-4417-ace3-6ddd2b39c2be)
+Class: Class 11 (876b7c93-58f8-48d4-a1e7-d8d2626bf9c7)
+Class: class 6 (ff2aadc7-0513-47aa-9dbb-e826aa386328)
+Class: class 10 (c66c8184-908e-4098-8fda-4c1091e40459)
+--- METHOD RESULT ---
+[
+  {
+    "id": "b09f1c70-f8c3-4b60-8b7e-138800e3ff8c",
+    "username": "maitri12",
+    "email": "maitri1@gmai.com",
+    "password": "$2b$10$t.y8XRf/R4G8XrBFHl/.P.ZHmoq/idAtc7VrehJCfgsgH5t/G8B0q",
+    "fullName": "Maitri patel",
+    "role": "student",
+    "studentId": "maitri12",
+    "organizationId": null,
+    "instituteId": null,
+    "createdAt": "2025-11-28T13:20:12.665Z",
+    "className": "Class 10",
+    "section": "B",
+    "rollNumber": 12
+  },
+  {
+    "id": "dd276ec1-1aed-4e9b-9f20-ae6f0e4a84ba",
+    "username": "maitri1",
+    "email": "maitri@gmai.com",
+    "password": "$2b$10$d.q1am5ysETFYhHZwg2lXejWk8EBRRzcQ6rYX2gZKnxUgizH1CTte",
+    "fullName": "Maitri",
+    "role": "student",
+    "studentId": "maitri1",
+    "organizationId": null,
+    "instituteId": null,
+    "createdAt": "2025-11-28T13:05:48.158Z",
+    "className": "Class 10",
+    "section": "B",
+    "rollNumber": 2
+  }
+]
+--- API STUDENTS ---
+[
+  {
+    "id": "b09f1c70-f8c3-4b60-8b7e-138800e3ff8c",
+    "username": "maitri12",
+    "email": "maitri1@gmai.com",
+    "password": "$2b$10$t.y8XRf/R4G8XrBFHl/.P.ZHmoq/idAtc7VrehJCfgsgH5t/G8B0q",
+    "fullName": "Maitri patel",
+    "role": "student",
+    "studentId": "maitri12",
+    "organizationId": null,
+    "instituteId": null,
+    "createdAt": "2025-11-28T13:20:12.665Z",
+    "className": "Class 10",
+    "section": "B",
+    "rollNumber": 12
+  },
+  {
+    "id": "dd276ec1-1aed-4e9b-9f20-ae6f0e4a84ba",
+    "username": "maitri1",
+    "email": "maitri@gmai.com",
+    "password": "$2b$10$d.q1am5ysETFYhHZwg2lXejWk8EBRRzcQ6rYX2gZKnxUgizH1CTte",
+    "fullName": "Maitri",
+    "role": "student",
+    "studentId": "maitri1",
+    "organizationId": null,
+    "instituteId": null,
+    "createdAt": "2025-11-28T13:05:48.158Z",
+    "className": "Class 10",
+    "section": "B",
+    "rollNumber": 2
+  }
+]
+--- API STUDENTS ---
+[
+  {
+    "id": "b09f1c70-f8c3-4b60-8b7e-138800e3ff8c",
+    "username": "maitri12",
+    "email": "maitri1@gmai.com",
+    "password": "$2b$10$t.y8XRf/R4G8XrBFHl/.P.ZHmoq/idAtc7VrehJCfgsgH5t/G8B0q",
+    "fullName": "Maitri patel",
+    "role": "student",
+    "studentId": "maitri12",
+    "organizationId": null,
+    "instituteId": null,
+    "createdAt": "2025-11-28T13:20:12.665Z",
+    "className": "Class 10",
+    "section": "B",
+    "rollNumber": 12
+  },
+  {
+    "id": "dd276ec1-1aed-4e9b-9f20-ae6f0e4a84ba",
+    "username": "maitri1",
+    "email": "maitri@gmai.com",
+    "password": "$2b$10$d.q1am5ysETFYhHZwg2lXejWk8EBRRzcQ6rYX2gZKnxUgizH1CTte",
+    "fullName": "Maitri",
+    "role": "student",
+    "studentId": "maitri1",
+    "organizationId": null,
+    "instituteId": null,
+    "createdAt": "2025-11-28T13:05:48.158Z",
+    "className": "Class 10",
+    "section": "B",
+    "rollNumber": 2
+  }
+]
+--- API STUDENTS ---
+[
+  {
+    "id": "b09f1c70-f8c3-4b60-8b7e-138800e3ff8c",
+    "username": "maitri12",
+    "email": "maitri1@gmai.com",
+    "password": "$2b$10$t.y8XRf/R4G8XrBFHl/.P.ZHmoq/idAtc7VrehJCfgsgH5t/G8B0q",
+    "fullName": "Maitri patel",
+    "role": "student",
+    "studentId": "maitri12",
+    "organizationId": null,
+    "instituteId": null,
+    "createdAt": "2025-11-28T13:20:12.665Z",
+    "className": "Class 10",
+    "section": "B",
+    "rollNumber": 12
+  },
+  {
+    "id": "dd276ec1-1aed-4e9b-9f20-ae6f0e4a84ba",
+    "username": "maitri1",
+    "email": "maitri@gmai.com",
+    "password": "$2b$10$d.q1am5ysETFYhHZwg2lXejWk8EBRRzcQ6rYX2gZKnxUgizH1CTte",
+    "fullName": "Maitri",
+    "role": "student",
+    "studentId": "maitri1",
+    "organizationId": null,
+    "instituteId": null,
+    "createdAt": "2025-11-28T13:05:48.158Z",
+    "className": "Class 10",
+    "section": "B",
+    "rollNumber": 2
+  }
+]
+--- API STUDENTS ---
+[
+  {
+    "id": "b09f1c70-f8c3-4b60-8b7e-138800e3ff8c",
+    "username": "maitri12",
+    "email": "maitri1@gmai.com",
+    "password": "$2b$10$t.y8XRf/R4G8XrBFHl/.P.ZHmoq/idAtc7VrehJCfgsgH5t/G8B0q",
+    "fullName": "Maitri patel",
+    "role": "student",
+    "studentId": "maitri12",
+    "organizationId": null,
+    "instituteId": null,
+    "createdAt": "2025-11-28T13:20:12.665Z",
+    "className": "Class 10",
+    "section": "B",
+    "rollNumber": 12
+  },
+  {
+    "id": "dd276ec1-1aed-4e9b-9f20-ae6f0e4a84ba",
+    "username": "maitri1",
+    "email": "maitri@gmai.com",
+    "password": "$2b$10$d.q1am5ysETFYhHZwg2lXejWk8EBRRzcQ6rYX2gZKnxUgizH1CTte",
+    "fullName": "Maitri",
+    "role": "student",
+    "studentId": "maitri1",
+    "organizationId": null,
+    "instituteId": null,
+    "createdAt": "2025-11-28T13:05:48.158Z",
+    "className": "Class 10",
+    "section": "B",
+    "rollNumber": 2
+  }
+]
+--- API STUDENTS ---
+[
+  {
+    "id": "b09f1c70-f8c3-4b60-8b7e-138800e3ff8c",
+    "username": "maitri12",
+    "email": "maitri1@gmai.com",
+    "password": "$2b$10$t.y8XRf/R4G8XrBFHl/.P.ZHmoq/idAtc7VrehJCfgsgH5t/G8B0q",
+    "fullName": "Maitri patel",
+    "role": "student",
+    "studentId": "maitri12",
+    "organizationId": null,
+    "instituteId": null,
+    "createdAt": "2025-11-28T13:20:12.665Z",
+    "className": "Class 10",
+    "section": "B",
+    "rollNumber": 12
+  },
+  {
+    "id": "dd276ec1-1aed-4e9b-9f20-ae6f0e4a84ba",
+    "username": "maitri1",
+    "email": "maitri@gmai.com",
+    "password": "$2b$10$d.q1am5ysETFYhHZwg2lXejWk8EBRRzcQ6rYX2gZKnxUgizH1CTte",
+    "fullName": "Maitri",
+    "role": "student",
+    "studentId": "maitri1",
+    "organizationId": null,
+    "instituteId": null,
+    "createdAt": "2025-11-28T13:05:48.158Z",
+    "className": "Class 10",
+    "section": "B",
+    "rollNumber": 2
+  }
+]
+--- API STUDENTS ---
+[
+  {
+    "id": "b09f1c70-f8c3-4b60-8b7e-138800e3ff8c",
+    "username": "maitri12",
+    "email": "maitri1@gmai.com",
+    "password": "$2b$10$t.y8XRf/R4G8XrBFHl/.P.ZHmoq/idAtc7VrehJCfgsgH5t/G8B0q",
+    "fullName": "Maitri patel",
+    "role": "student",
+    "studentId": "maitri12",
+    "organizationId": null,
+    "instituteId": null,
+    "createdAt": "2025-11-28T13:20:12.665Z",
+    "className": "Class 10",
+    "section": "B",
+    "rollNumber": 12
+  },
+  {
+    "id": "dd276ec1-1aed-4e9b-9f20-ae6f0e4a84ba",
+    "username": "maitri1",
+    "email": "maitri@gmai.com",
+    "password": "$2b$10$d.q1am5ysETFYhHZwg2lXejWk8EBRRzcQ6rYX2gZKnxUgizH1CTte",
+    "fullName": "Maitri",
+    "role": "student",
+    "studentId": "maitri1",
+    "organizationId": null,
+    "instituteId": null,
+    "createdAt": "2025-11-28T13:05:48.158Z",
+    "className": "Class 10",
+    "section": "B",
+    "rollNumber": 2
+  }
+]
+--- API STUDENTS ---
+[
+  {
+    "id": "b09f1c70-f8c3-4b60-8b7e-138800e3ff8c",
+    "username": "maitri12",
+    "email": "maitri1@gmai.com",
+    "password": "$2b$10$t.y8XRf/R4G8XrBFHl/.P.ZHmoq/idAtc7VrehJCfgsgH5t/G8B0q",
+    "fullName": "Maitri patel",
+    "role": "student",
+    "studentId": "maitri12",
+    "organizationId": null,
+    "instituteId": null,
+    "createdAt": "2025-11-28T13:20:12.665Z",
+    "className": "Class 10",
+    "section": "B",
+    "rollNumber": 12
+  },
+  {
+    "id": "dd276ec1-1aed-4e9b-9f20-ae6f0e4a84ba",
+    "username": "maitri1",
+    "email": "maitri@gmai.com",
+    "password": "$2b$10$d.q1am5ysETFYhHZwg2lXejWk8EBRRzcQ6rYX2gZKnxUgizH1CTte",
+    "fullName": "Maitri",
+    "role": "student",
+    "studentId": "maitri1",
+    "organizationId": null,
+    "instituteId": null,
+    "createdAt": "2025-11-28T13:05:48.158Z",
+    "className": "Class 10",
+    "section": "B",
+    "rollNumber": 2
+  }
+]
