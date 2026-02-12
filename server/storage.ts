@@ -156,7 +156,9 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createUser(user: InsertUser): Promise<User> {
-    const [newUser] = await db.insert(users).values(user).returning();
+    const id = crypto.randomUUID();
+    await db.insert(users).values({ ...user, id });
+    const [newUser] = await db.select().from(users).where(eq(users.id, id));
     return newUser;
   }
 
@@ -169,20 +171,20 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateUserPassword(userId: string, hashedPassword: string): Promise<User> {
-    const [updatedUser] = await db
+    await db
       .update(users)
       .set({ password: hashedPassword })
-      .where(eq(users.id, userId))
-      .returning();
+      .where(eq(users.id, userId));
+    const [updatedUser] = await db.select().from(users).where(eq(users.id, userId));
     return updatedUser;
   }
 
   async updateUser(id: string, userData: Partial<InsertUser>): Promise<User> {
-    const [updatedUser] = await db
+    await db
       .update(users)
       .set(userData)
-      .where(eq(users.id, id))
-      .returning();
+      .where(eq(users.id, id));
+    const [updatedUser] = await db.select().from(users).where(eq(users.id, id));
     return updatedUser;
   }
 
@@ -312,7 +314,9 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createClass(classData: InsertClass): Promise<Class> {
-    const [newClass] = await db.insert(classes).values(classData).returning();
+    const id = crypto.randomUUID();
+    await db.insert(classes).values({ ...classData, id });
+    const [newClass] = await db.select().from(classes).where(eq(classes.id, id));
     return newClass;
   }
 
@@ -369,7 +373,9 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createSubject(subject: InsertSubject): Promise<Subject> {
-    const [newSubject] = await db.insert(subjects).values(subject).returning();
+    const id = crypto.randomUUID();
+    await db.insert(subjects).values({ ...subject, id });
+    const [newSubject] = await db.select().from(subjects).where(eq(subjects.id, id));
     return newSubject;
   }
 
@@ -388,7 +394,9 @@ export class DatabaseStorage implements IStorage {
 
   // ============ CLASS-SUBJECT RELATIONSHIPS ============
   async assignSubjectToClass(data: InsertClassSubject): Promise<ClassSubject> {
-    const [assignment] = await db.insert(classSubjects).values(data).returning();
+    const id = crypto.randomUUID();
+    await db.insert(classSubjects).values({ ...data, id });
+    const [assignment] = await db.select().from(classSubjects).where(eq(classSubjects.id, id));
     return assignment;
   }
 
@@ -417,7 +425,9 @@ export class DatabaseStorage implements IStorage {
       throw new Error("Teacher is already assigned to this class/subject");
     }
 
-    const [assignment] = await db.insert(teacherClasses).values(data).returning();
+    const id = crypto.randomUUID();
+    await db.insert(teacherClasses).values({ ...data, id });
+    const [assignment] = await db.select().from(teacherClasses).where(eq(teacherClasses.id, id));
     return assignment;
   }
 
@@ -556,7 +566,9 @@ export class DatabaseStorage implements IStorage {
       }
     }
 
-    const [enrollment] = await db.insert(studentClasses).values(data).returning();
+    const id = crypto.randomUUID();
+    await db.insert(studentClasses).values({ ...data, id });
+    const [enrollment] = await db.select().from(studentClasses).where(eq(studentClasses.id, id));
     return enrollment;
   }
 
@@ -678,12 +690,15 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createExam(exam: InsertExam, classIds?: string[]): Promise<Exam> {
-    const [newExam] = await db.insert(exams).values(exam).returning();
+    const id = crypto.randomUUID();
+    await db.insert(exams).values({ ...exam, id });
+    const [newExam] = await db.select().from(exams).where(eq(exams.id, id));
 
     if (classIds && classIds.length > 0) {
       await db.insert(examClasses).values(
         classIds.map(classId => ({
-          examId: newExam.id,
+          id: crypto.randomUUID(),
+          examId: id,
           classId,
         }))
       );
@@ -693,13 +708,15 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateExam(id: string, exam: Partial<InsertExam>, classIds?: string[]): Promise<Exam> {
-    const [updated] = await db.update(exams).set(exam).where(eq(exams.id, id)).returning();
+    await db.update(exams).set(exam).where(eq(exams.id, id));
+    const [updated] = await db.select().from(exams).where(eq(exams.id, id));
 
     if (classIds) {
       await db.delete(examClasses).where(eq(examClasses.examId, id));
       if (classIds.length > 0) {
         await db.insert(examClasses).values(
           classIds.map(classId => ({
+            id: crypto.randomUUID(),
             examId: id,
             classId,
           }))
@@ -716,11 +733,11 @@ export class DatabaseStorage implements IStorage {
   }
 
   async publishExam(id: string): Promise<Exam> {
-    const [published] = await db
+    await db
       .update(exams)
       .set({ isPublished: true, status: "published" })
-      .where(eq(exams.id, id))
-      .returning();
+      .where(eq(exams.id, id));
+    const [published] = await db.select().from(exams).where(eq(exams.id, id));
     return published;
   }
 
@@ -730,7 +747,9 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createQuestion(question: InsertQuestion): Promise<Question> {
-    const [newQuestion] = await db.insert(questions).values(question).returning();
+    const id = crypto.randomUUID();
+    await db.insert(questions).values({ ...question, id });
+    const [newQuestion] = await db.select().from(questions).where(eq(questions.id, id));
     return newQuestion;
   }
 
@@ -740,7 +759,9 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createQuestionOption(option: InsertQuestionOption): Promise<QuestionOption> {
-    const [newOption] = await db.insert(questionOptions).values(option).returning();
+    const id = crypto.randomUUID();
+    await db.insert(questionOptions).values({ ...option, id });
+    const [newOption] = await db.select().from(questionOptions).where(eq(questionOptions.id, id));
     return newOption;
   }
 
@@ -761,7 +782,9 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createNumericAnswer(answer: InsertNumericAnswer): Promise<NumericAnswer> {
-    const [newAnswer] = await db.insert(numericAnswers).values(answer).returning();
+    const id = crypto.randomUUID();
+    await db.insert(numericAnswers).values({ ...answer, id });
+    const [newAnswer] = await db.select().from(numericAnswers).where(eq(numericAnswers.id, id));
     return newAnswer;
   }
 
@@ -780,12 +803,15 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createExamAttempt(attempt: InsertExamAttempt): Promise<ExamAttempt> {
-    const [newAttempt] = await db.insert(examAttempts).values(attempt).returning();
+    const id = crypto.randomUUID();
+    await db.insert(examAttempts).values({ ...attempt, id });
+    const [newAttempt] = await db.select().from(examAttempts).where(eq(examAttempts.id, id));
     return newAttempt;
   }
 
   async updateExamAttempt(id: string, attempt: Partial<InsertExamAttempt>): Promise<ExamAttempt> {
-    const [updated] = await db.update(examAttempts).set(attempt).where(eq(examAttempts.id, id)).returning();
+    await db.update(examAttempts).set(attempt).where(eq(examAttempts.id, id));
+    const [updated] = await db.select().from(examAttempts).where(eq(examAttempts.id, id));
     return updated;
   }
 
@@ -799,7 +825,17 @@ export class DatabaseStorage implements IStorage {
 
   // ============ STUDENT ANSWERS ============
   async createOrUpdateStudentAnswer(answer: InsertStudentAnswer): Promise<StudentAnswer> {
-    const [newAnswer] = await db.insert(studentAnswers).values(answer).returning();
+    const id = crypto.randomUUID();
+    // Handle JSON serialization for MySQL
+    const values = {
+      ...answer,
+      id,
+      selectedOptions: Array.isArray(answer.selectedOptions)
+        ? JSON.stringify(answer.selectedOptions)
+        : (answer.selectedOptions as string || null)
+    };
+    await db.insert(studentAnswers).values(values);
+    const [newAnswer] = await db.select().from(studentAnswers).where(eq(studentAnswers.id, id));
     return newAnswer;
   }
 
