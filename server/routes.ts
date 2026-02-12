@@ -208,9 +208,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         message: "Admin account created successfully",
         credentials: { username: "admin", password: "admin123" }
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Setup error:", error);
-      res.status(500).json({ message: "Server error" });
+      res.status(500).json({ message: error.message || "Server error" });
     }
   });
 
