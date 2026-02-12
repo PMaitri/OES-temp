@@ -220,7 +220,9 @@ export class DatabaseStorage implements IStorage {
       throw new Error("Token expired");
     }
 
-    const hashedPassword = await import("bcrypt").then(m => m.compare ? m.hash(newPassword, 10) : m.default.hash(newPassword, 10));
+    const bcrypt = await import("bcrypt");
+    const hashFn = (bcrypt.default && bcrypt.default.hash) || bcrypt.hash;
+    const hashedPassword = await hashFn(newPassword, 10);
 
     await this.updateUserPassword(data.userId, hashedPassword);
 

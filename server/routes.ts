@@ -79,9 +79,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         section: c.section
       }));
       res.json(publicClasses);
-    } catch (error) {
-      console.error("Error fetching public classes:", error);
-      res.status(500).json({ message: "Server error" });
+    } catch (error: any) {
+      console.error("Auth error:", error);
+      res.status(500).json({ message: error.message || "Server error" });
     }
   });
 
@@ -179,9 +179,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         },
         token,
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Registration error:", error);
-      res.status(500).json({ message: "Server error" });
+      res.status(500).json({ message: error.message || "Server error" });
     }
   });
 
@@ -269,9 +269,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         },
         token,
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Login error:", error);
-      res.status(500).json({ message: "Server error" });
+      res.status(500).json({ message: error.message || "Server error" });
     }
   });
 
