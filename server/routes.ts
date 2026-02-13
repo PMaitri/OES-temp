@@ -546,9 +546,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.patch("/api/admin/users/:id", authenticateToken, requireRole("admin"), async (req, res) => {
     try {
       const userId = req.params.id;
-      const { fullName, email, role, password } = req.body;
+      const { fullName, email, role, password, studentId, rollNumber } = req.body;
 
-      const updateData: any = { fullName, email, role };
+      const updateData: any = { fullName, email, role, studentId };
       if (password) {
         if (password.length < 6) {
           return res.status(400).json({ message: "Password must be at least 6 characters" });
@@ -557,6 +557,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const updatedUser = await storage.updateUser(userId, updateData);
+
+      // If rollNumber is provided, update student enrollment
+      if (rollNumber !== undefined && rollNumber !== null) {
+        await storage.updateStudentEnrollment(userId, parseInt(rollNumber));
+      }
+
       res.json(updatedUser);
     } catch (error: any) {
       console.error("Error updating user:", error);

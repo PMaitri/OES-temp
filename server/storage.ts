@@ -131,6 +131,7 @@ export interface IStorage {
   // Student Answers
   createOrUpdateStudentAnswer(answer: InsertStudentAnswer): Promise<StudentAnswer>;
   getAnswersByAttempt(attemptId: string): Promise<StudentAnswer[]>;
+  updateStudentEnrollment(studentId: string, rollNumber: number): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -843,6 +844,13 @@ export class DatabaseStorage implements IStorage {
 
   async getAnswersByAttempt(attemptId: string): Promise<StudentAnswer[]> {
     return await db.select().from(studentAnswers).where(eq(studentAnswers.attemptId, attemptId));
+  }
+
+  async updateStudentEnrollment(studentId: string, rollNumber: number): Promise<void> {
+    await db
+      .update(studentClasses)
+      .set({ rollNumber })
+      .where(eq(studentClasses.studentId, studentId));
   }
 }
 

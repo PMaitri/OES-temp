@@ -142,13 +142,21 @@ export default function AdminDashboard() {
   const [newStudentPassword, setNewStudentPassword] = useState("");
   const [searchTeacher, setSearchTeacher] = useState("");
   const [searchStudent, setSearchStudent] = useState("");
+  const [editStudentId, setEditStudentId] = useState("");
+  const [editStudentRoll, setEditStudentRoll] = useState("");
+  const [editStudentName, setEditStudentName] = useState("");
   const [expandedClasses, setExpandedClasses] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     if (selectedTeacher) {
       setEditTeacherName(selectedTeacher.fullName);
     }
-  }, [selectedTeacher]);
+    if (selectedStudent) {
+      setEditStudentId(selectedStudent.studentId || "");
+      setEditStudentRoll(selectedStudent.rollNumber ? String(selectedStudent.rollNumber) : "");
+      setEditStudentName(selectedStudent.fullName || "");
+    }
+  }, [selectedTeacher, selectedStudent]);
 
   const [showTeacherPassword, setShowTeacherPassword] = useState(false);
   const [showStudentPassword, setShowStudentPassword] = useState(false);
@@ -1197,12 +1205,10 @@ export default function AdminDashboard() {
                   </div>
 
                   <div>
-                    <Label htmlFor="rollNumber">Roll Number (1-50)</Label>
+                    <Label htmlFor="rollNumber">Roll Number</Label>
                     <Input
                       id="rollNumber"
                       type="number"
-                      min="1"
-                      max="50"
                       placeholder="e.g., 15"
                       value={enrollStudentForm.rollNumber}
                       onChange={(e) => setEnrollStudentForm({ ...enrollStudentForm, rollNumber: e.target.value })}
@@ -1234,32 +1240,97 @@ export default function AdminDashboard() {
           </DialogHeader>
           {selectedStudent && (
             <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label className="text-muted-foreground">Full Name</Label>
-                  <p className="font-medium">{selectedStudent.fullName}</p>
+              <div className="grid grid-cols-1 gap-4">
+                <div className="space-y-2">
+                  <Label>Full Name</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      value={editStudentName}
+                      onChange={(e) => setEditStudentName(e.target.value)}
+                    />
+                    <Button
+                      size="sm"
+                      onClick={() => {
+                        if (selectedStudent) {
+                          updateUserMutation.mutate({
+                            id: selectedStudent.id,
+                            data: { fullName: editStudentName }
+                          });
+                        }
+                      }}
+                      disabled={updateUserMutation.isPending || !selectedStudent || editStudentName === selectedStudent.fullName}
+                    >
+                      Save
+                    </Button>
+                  </div>
                 </div>
-                <div>
-                  <Label className="text-muted-foreground">Student ID</Label>
-                  <p className="font-medium">{selectedStudent.studentId || "N/A"}</p>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Student ID</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        value={editStudentId}
+                        onChange={(e) => setEditStudentId(e.target.value)}
+                      />
+                      <Button
+                        size="sm"
+                        onClick={() => {
+                          if (selectedStudent) {
+                            updateUserMutation.mutate({
+                              id: selectedStudent.id,
+                              data: { studentId: editStudentId }
+                            });
+                          }
+                        }}
+                        disabled={updateUserMutation.isPending || !selectedStudent || editStudentId === selectedStudent.studentId}
+                      >
+                        Save
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Roll Number</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        type="number"
+                        value={editStudentRoll}
+                        onChange={(e) => setEditStudentRoll(e.target.value)}
+                      />
+                      <Button
+                        size="sm"
+                        onClick={() => {
+                          if (selectedStudent) {
+                            updateUserMutation.mutate({
+                              id: selectedStudent.id,
+                              data: { rollNumber: editStudentRoll }
+                            });
+                          }
+                        }}
+                        disabled={updateUserMutation.isPending || !selectedStudent || editStudentRoll === String(selectedStudent.rollNumber)}
+                      >
+                        Save
+                      </Button>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <Label className="text-muted-foreground">Username</Label>
-                  <p className="font-medium">{selectedStudent.username}</p>
-                </div>
-                <div>
-                  <Label className="text-muted-foreground">Email</Label>
-                  <p className="font-medium">{selectedStudent.email}</p>
-                </div>
-                <div>
-                  <Label className="text-muted-foreground">Class</Label>
-                  <p className="font-medium">
-                    {selectedStudent.className ? `${selectedStudent.className} - ${selectedStudent.section}` : "Not Enrolled"}
-                  </p>
-                </div>
-                <div>
-                  <Label className="text-muted-foreground">Roll Number</Label>
-                  <p className="font-medium">{selectedStudent.rollNumber || "N/A"}</p>
+
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <Label className="text-muted-foreground">Username</Label>
+                    <p className="font-medium">{selectedStudent.username}</p>
+                  </div>
+                  <div>
+                    <Label className="text-muted-foreground">Email</Label>
+                    <p className="font-medium">{selectedStudent.email}</p>
+                  </div>
+                  <div>
+                    <Label className="text-muted-foreground">Class</Label>
+                    <p className="font-medium">
+                      {selectedStudent.className ? `${selectedStudent.className} - ${selectedStudent.section}` : "Not Enrolled"}
+                    </p>
+                  </div>
                 </div>
               </div>
 
