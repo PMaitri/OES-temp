@@ -1034,6 +1034,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Unpublish exam (Stop/Revert to draft)
+  app.put("/api/teacher/exam/:id/unpublish", authenticateToken, requireRole("teacher"), async (req, res) => {
+    try {
+      const teacherId = req.user!.id;
+      const examId = req.params.id;
+
+      // Verify exam belongs to teacher
+      const exam = await storage.getExam(examId);
+      if (!exam) return res.status(404).json({ message: "Exam not found" });
+
+      if (exam.teacherId !== teacherId) {
+        return res.status(403).json({ message: "You can only unpublish your own exams" });
+      }
+
+      // Check if exam has already started
+      const now = new Date();
+      if (now >= new Date(exam.scheduledAt)) {
+        return res.status(400).json({ message: "Cannot unpublish an exam that has already started" });
+      }
+
+      // Update to draft and unpublish
+      const updatedExam = await storage.updateExam(examId, {
+        isPublished: false,
+        status: "draft"
+      });
+
+      console.log("Exam unpublished:", examId);
+      res.json({ message: "Exam unpublished successfully", exam: updatedExam });
+    } catch (error) {
+      console.error("Error unpublishing exam:", error);
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+
   // ============ STUDENT ROUTES ============
 
   app.get("/api/student/stats", authenticateToken, requireRole("student"), async (req, res) => {

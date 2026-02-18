@@ -6,7 +6,7 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import { Plus, Eye, CheckCircle, Clock, Upload, Loader2, Calendar, Users, ArrowLeft } from "lucide-react";
+import { Plus, Eye, CheckCircle, Clock, Upload, Loader2, Calendar, Users, ArrowLeft, Ban } from "lucide-react";
 import { CountdownTimer } from "@/components/countdown-timer";
 
 interface Exam {
@@ -59,6 +59,26 @@ export default function TeacherExams() {
                 variant: "destructive",
                 title: "Failed to publish exam",
                 description: error.message || "Please try again",
+            });
+        },
+    });
+
+    const unpublishExamMutation = useMutation({
+        mutationFn: async (examId: string) => {
+            return apiRequest("PUT", `/api/teacher/exam/${examId}/unpublish`, {});
+        },
+        onSuccess: () => {
+            toast({
+                title: "Exam unpublished",
+                description: "Exam reverted to draft status. You can now edit it.",
+            });
+            queryClient.invalidateQueries({ queryKey: ["/api/teacher/exams"] });
+        },
+        onError: (error) => {
+            toast({
+                variant: "destructive",
+                title: "Failed to unpublish",
+                description: error.message || "Cannot unpublish started exam",
             });
         },
     });
@@ -296,6 +316,20 @@ export default function TeacherExams() {
                                                         <Users className="w-4 h-4 mr-2" />
                                                         View Results
                                                     </Button>
+                                                    {new Date() < new Date(exam.scheduledAt) && (
+                                                        <Button
+                                                            variant="destructive"
+                                                            onClick={() => unpublishExamMutation.mutate(exam.id)}
+                                                            disabled={unpublishExamMutation.isPending}
+                                                        >
+                                                            {unpublishExamMutation.isPending ? (
+                                                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                                            ) : (
+                                                                <Ban className="w-4 h-4 mr-2" />
+                                                            )}
+                                                            Stop / Edit
+                                                        </Button>
+                                                    )}
                                                 </div>
                                             </CardContent>
                                         </Card>
