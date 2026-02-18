@@ -1,0 +1,140 @@
+You are an expert full-stack architect. Build a complete, modern, production-grade School Assessment & Examination System with the quality of SecureExam, OnlineExamMaker, Gradescope, ProProfs, and NTA CBT platforms.
+
+Your job: AUTOGENERATE the full project from scratch with a clean, scalable, professional architecture.
+
+────────────────────────────
+🏗️ SYSTEM GOAL
+Create an entire working product including:
+
+• Frontend (React + Tailwind + TypeScript)
+• Backend (Node.js + Express or FastAPI)
+• Database (PostgreSQL preferred)
+• Authentication (JWT + Refresh + RBAC)
+• Student, Teacher, Admin portals
+• Full exam engine (MCQ/MSQ/Numeric/T-F)
+• Complete question bank
+• Performance analytics dashboards
+• Anti-cheating + secure exam environment
+• Clean folder architecture & modular code
+• Auto-generate missing modules without asking
+• Documentation + migrations + routes
+────────────────────────────
+
+🏫 MODULES
+
+1️⃣ STUDENT PORTAL
+• Login/Register
+• Dashboard: upcoming tests, past tests, results
+• Performance graphs (Recharts)
+• Score history, strong/weak topics
+• Notifications
+• Exam Engine:
+  – Question palette (visited, not visited, marked)
+  – Save & Next / Clear
+  – Subject tabs
+  – Auto-save after every interaction
+  – Timer + auto-submit
+  – Random question/order shuffle
+  – Full-screen enforce
+  – Tab-change warnings
+  – Focus-loss events logged
+  – Optional webcam check
+
+2️⃣ TEACHER PORTAL
+• Create/schedule/edit tests
+• Question bank CRUD
+• Import questions (CSV/Excel)
+• Assign tests to classes
+• Live exam monitoring
+• Auto/Manual evaluation
+• Analytics:
+  – Student-wise / Class-wise
+  – Difficulty analysis
+  – Topic analysis
+• Export results to PDF/Excel
+
+3️⃣ ADMIN PORTAL
+• Manage students, teachers, classes
+• Global question bank
+• Marking schemes (negative/partial)
+• Branding settings (school logo, colors)
+• System analytics dashboard
+• Roles & permissions
+
+────────────────────────────
+🔐 SECURITY REQUIREMENTS
+• JWT access + refresh tokens
+• Password resets
+• Prevent multi-login during exam
+• Exam session lock
+• Cheating logs (tab changes, focus lost, etc.)
+
+────────────────────────────
+🗄️ DATABASE (PostgreSQL)
+Create schema for:
+
+• Users
+• Classes
+• Exams
+• Questions
+• Options
+• Attempts
+• Results
+• Notifications
+• Activity logs
+• Cheating logs
+• Settings
+
+Include migrations + relationships.
+
+────────────────────────────
+💻 TECH STACK
+Frontend: React + Tailwind + TS  
+Backend: Node.js (Express) or FastAPI  
+Charts: Recharts  
+State: Zustand or Redux  
+Database: PostgreSQL  
+ORM: Prisma (preferred) or Knex  
+
+────────────────────────────
+📦 DELIVERABLES
+
+Antigravity must generate:
+
+✔ Project folder structure  
+✔ Frontend boilerplate  
+✔ Backend boilerplate  
+✔ Database schema + migrations  
+✔ API route structure  
+✔ Auth module  
+✔ Question bank module  
+✔ Exam engine module  
+✔ Analytics module  
+✔ React UI pages:
+   – Login/Register
+   – Student dashboard
+   – Teacher dashboard
+   – Admin dashboard
+   – Question bank UI
+   – Exam interface (full NTA-style)
+   – Result pages + charts
+✔ Reusable UI components  
+✔ Documentation (README + API docs)
+
+────────────────────────────
+🧠 AUTONOMY RULES (IMPORTANT)
+
+• If any file, module, type, or route is missing — create it automatically.  
+• Do NOT ask for clarification.  
+• Produce clean code with comments.  
+• Follow DRY, SOLID, modular architecture.  
+• Keep UI modern, clean, and school-friendly.  
+• Continue generating until the entire app is scaffolded.
+
+────────────────────────────
+START NOW by generating:
+
+1. Project folder structure (frontend + backend)
+2. Backend boilerplate
+3. Frontend boilerplate
+4. Database schema (initial version)
