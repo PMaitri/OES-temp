@@ -22,14 +22,7 @@ try {
 
 export { pool };
 
-if (pool) {
-  pool.getConnection()
-    .then(() => console.log("✅ Database connection successful!"))
-    .catch((err: any) => { // Added type annotation for err
-      console.error("❌ Database connection failed:", err.message);
-      console.error("Check your credentials in the Hostinger panel.");
-    });
-}
+// Connection testing is handled on-demand to prevent startup crashes
 
 // Create the drizzle instance
 const drizzleInstance = pool ? drizzle(pool, { schema, mode: 'default' }) : null;
