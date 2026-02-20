@@ -8,23 +8,33 @@ const defaultUrl = 'mysql://u241368025_dbadmin:PrepIQ2026Secure@localhost/u24136
 const dbUrl = process.env.DATABASE_URL || defaultUrl;
 
 let pool: any = null;
+let drizzleInstance: any = null;
 
 export function getDb() {
-  if (!pool) {
+  if (!drizzleInstance) {
     try {
-      console.log("🔌 Lazy-loading database pool...");
-      pool = mysql.createPool(dbUrl);
+      if (!pool) {
+        console.log("🔌 Initializing MySQL pool for Hostinger...");
+        pool = mysql.createPool(dbUrl);
+      }
+      drizzleInstance = drizzle(pool, { schema, mode: 'default' });
+      console.log("✅ Drizzle instance created successfully.");
     } catch (err) {
-      console.error("❌ DB Pool Error:", err);
+      console.error("❌ Database Initialization Error:", err);
     }
   }
-  return drizzle(pool, { schema, mode: 'default' });
+  return drizzleInstance;
 }
 
-// Export a proxy as 'db' so we don't have to change 100 files
+// Export a robust proxy that preserves method binding
 export const db = new Proxy({} as any, {
   get: (target, prop) => {
-    return (getDb() as any)[prop];
+    const instance = getDb();
+    if (!instance) {
+      throw new Error(`Database not initialized. Cannot access property '${String(prop)}'`);
+    }
+    const value = instance[prop];
+    return typeof value === 'function' ? value.bind(instance) : value;
   }
 });
 

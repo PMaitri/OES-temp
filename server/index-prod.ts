@@ -32,11 +32,13 @@ export async function serveStatic(app: Express, _server: Server) {
 }
 
 (async () => {
-  console.log("🚀 PRODUCTION SERVER STARTING...");
+  console.log("🚀 PRODUCTION BUNDLE INITIALIZING...");
   try {
+    // If we are running inside server.cjs, we might not want to call listen() again.
+    // However, our current structure requires runApp to set up the routes.
     await runApp(serveStatic);
-    console.log("✅ Server components initialized.");
+    console.log("✅ Application routes and static files initialized.");
   } catch (error: any) {
-    console.error("❌ STARTUP ERROR:", error);
+    console.error("❌ BUNDLE ERROR:", error);
   }
 })();
