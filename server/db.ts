@@ -4,10 +4,10 @@ import * as schema from "../shared/schema";
 
 console.log("🔌 Database module loading...");
 
-const dbUrl = process.env.DATABASE_URL;
+const dbUrl = process.env.DATABASE_URL || 'mysql://u241368025_dbadmin:School2026Secure%21@localhost/u241368025_PrepIQ';
 
-if (!dbUrl) {
-  console.error("❌ CRITICAL: DATABASE_URL environment variable is missing!");
+if (!process.env.DATABASE_URL) {
+  console.warn("⚠️ WARNING: DATABASE_URL missing from environment. Using hardcoded production fallback.");
 }
 
 let pool: any = null;
