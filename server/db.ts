@@ -5,12 +5,14 @@ import * as schema from "../shared/schema";
 console.log("🔌 Database module loading...");
 
 // Revert to 127.0.0.1 which we know is reachable
-const defaultUrl = 'mysql://u241368025_dbadmin:PrepIQ2026Secure@127.0.0.1/u241368025_PrepIQ';
+const defaultUrl = 'mysql://u241368025_dbadmin:PrepIQ2026Secure@localhost/u241368025_PrepIQ';
 const dbUrl = process.env.DATABASE_URL || defaultUrl;
 
 if (!process.env.DATABASE_URL) {
-  console.warn("⚠️ WARNING: DATABASE_URL missing from environment. Using hardcoded 127.0.0.1 fallback.");
+  console.warn("⚠️ WARNING: DATABASE_URL missing from environment. Using hardcoded localhost fallback.");
 }
+
+console.log(`🔌 Attempting connection to: ${dbUrl.split('@')[1]}`);
 
 let pool: any = null;
 const getPool = () => {
