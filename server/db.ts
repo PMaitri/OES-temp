@@ -10,13 +10,22 @@ if (!dbUrl) {
   console.error("❌ CRITICAL: DATABASE_URL environment variable is missing!");
 }
 
-export const pool = dbUrl ? mysql.createPool(dbUrl) : null;
+let pool: any = null;
+try {
+  if (dbUrl) {
+    pool = mysql.createPool(dbUrl);
+    console.log("🔌 Initializing connection pool...");
+  }
+} catch (err) {
+  console.error("❌ Error creating database pool:", err);
+}
+
+export { pool };
 
 if (pool) {
-  console.log("🔌 Initializing connection pool...");
   pool.getConnection()
     .then(() => console.log("✅ Database connection successful!"))
-    .catch((err) => {
+    .catch((err: any) => { // Added type annotation for err
       console.error("❌ Database connection failed:", err.message);
       console.error("Check your credentials in the Hostinger panel.");
     });
