@@ -12,26 +12,37 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export async function serveStatic(app: Express, _server: Server) {
-  // Check both dist/public and build/public
-  const buildPath = path.resolve(__dirname, "public");
-  const distPath = path.resolve(__dirname, "../dist/public");
-  const staticPath = fs.existsSync(buildPath) ? buildPath : distPath;
+  const rootDir = process.cwd();
+  const possiblePaths = [
+    path.join(rootDir, "build", "public"),
+    path.join(rootDir, "dist", "public"),
+    path.join(__dirname, "public"),
+    path.join(__dirname, "..", "dist", "public")
+  ];
 
-  console.log(`[STARTUP] Static files directory: ${staticPath}`);
+  let staticPath = "";
+  for (const p of possiblePaths) {
+    console.log(`[STARTUP] Checking path: ${p}`);
+    if (fs.existsSync(p)) {
+      staticPath = p;
+      console.log(`[STARTUP] ✅ Found static files at: ${staticPath}`);
+      break;
+    }
+  }
 
-  if (!fs.existsSync(staticPath)) {
-    console.error(`[STARTUP] ❌ ERROR: Static directory NOT FOUND!`);
-  } else {
-    console.log(`[STARTUP] ✅ Static directory found.`);
+  if (!staticPath) {
+    console.error(`[STARTUP] ❌ ERROR: Static directory NOT FOUND in any of: ${possiblePaths.join(", ")}`);
+    // Fallback to current dir public if everything else fails
+    staticPath = path.resolve(__dirname, "public");
   }
 
   app.use(express.static(staticPath));
 
   app.use("*", (req, res) => {
     if (req.path.startsWith("/api")) {
-      return res.status(404).json({ message: "API route not found" });
+      return res.status(404).json({ message: `API route not found: ${req.method} ${req.path}` });
     }
-    const indexPath = path.resolve(staticPath, "index.html");
+    const indexPath = path.join(staticPath, "index.html");
     if (fs.existsSync(indexPath)) {
       res.sendFile(indexPath);
     } else {
@@ -57,8 +68,9 @@ export async function serveStatic(app: Express, _server: Server) {
   try {
     await runApp(serveStatic);
     console.log("✅ Server components initialized successfully.");
-  } catch (error) {
+  } catch (error: any) {
     console.error("❌ FATAL ERROR DURING STARTUP:", error);
-    process.exit(1);
+    // Let server.cjs catch this rethrown error
+    throw error;
   }
 })();
