@@ -38,10 +38,20 @@ export async function serveStatic(app: Express, _server: Server) {
 
   app.use(express.static(staticPath));
 
+  // Catch-all route for SPA
   app.use("*", (req, res) => {
-    if (req.path.startsWith("/api")) {
-      return res.status(404).json({ message: `API route not found: ${req.method} ${req.path}` });
+    // Log every unmatched request to help debug
+    console.log(`[ROUTING] Unmatched ${req.method} request to: ${req.originalUrl}`);
+
+    // If it's an API request that wasn't caught by registerRoutes, return JSON 404
+    if (req.originalUrl.includes("/api/")) {
+      console.warn(`[ROUTING] ⚠️ API Route not found in registerRoutes: ${req.originalUrl}`);
+      return res.status(404).json({
+        message: `API endpoint not found: ${req.method} ${req.originalUrl}`,
+        note: "This usually means the route is not defined in server/routes.ts"
+      });
     }
+
     const indexPath = path.join(staticPath, "index.html");
     if (fs.existsSync(indexPath)) {
       res.sendFile(indexPath);
