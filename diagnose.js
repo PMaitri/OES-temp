@@ -1,9 +1,7 @@
-import fs from 'fs';
-import http from 'http';
-import path from 'path';
-import { fileURLToPath } from 'url';
+const fs = require('fs');
+const http = require('http');
+const path = require('path');
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const logFile = path.join(__dirname, 'startup-log.txt');
 
 function log(msg) {
@@ -12,7 +10,7 @@ function log(msg) {
     console.log(msg);
 }
 
-log("--- DIAGNOSTIC START ---");
+log("--- DIAGNOSTIC START (CJS) ---");
 log(`Node Version: ${process.version}`);
 log(`Working Dir: ${process.cwd()}`);
 log(`Port Env: ${process.env.PORT}`);
@@ -20,7 +18,12 @@ log(`Port Env: ${process.env.PORT}`);
 // Check for build folder
 const buildPath = path.join(__dirname, 'build');
 if (fs.existsSync(buildPath)) {
-    log(`✅ Found 'build' folder. Files: ${fs.readdirSync(buildPath)}`);
+    log(`✅ Found 'build' folder.`);
+    try {
+        log(`Files in build: ${fs.readdirSync(buildPath)}`);
+    } catch (e) {
+        log(`Error reading build: ${e.message}`);
+    }
 } else {
     log(`❌ 'build' FOLDER IS MISSING!`);
 }
@@ -28,9 +31,13 @@ if (fs.existsSync(buildPath)) {
 const server = http.createServer((req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/plain' });
     if (req.url === '/logs') {
-        res.end(fs.readFileSync(logFile, 'utf8'));
+        if (fs.existsSync(logFile)) {
+            res.end(fs.readFileSync(logFile, 'utf8'));
+        } else {
+            res.end('Log file not found yet.');
+        }
     } else {
-        res.end('Diagnostic server is running. Go to /logs to see the details.');
+        res.end('Diagnostic server (CJS) is running. Go to /logs to see the details.');
     }
 });
 
