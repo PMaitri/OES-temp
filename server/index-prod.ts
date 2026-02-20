@@ -12,35 +12,26 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export async function serveStatic(app: Express, _server: Server) {
-  // If we are in dist/index.js, __dirname is the dist folder.
-  // Static files are in dist/public/
-  const distPath = path.resolve(__dirname, "public");
+  // Check both dist/public and build/public
+  const buildPath = path.resolve(__dirname, "public");
+  const distPath = path.resolve(__dirname, "../dist/public");
+  const staticPath = fs.existsSync(buildPath) ? buildPath : distPath;
 
-  console.log(`[STARTUP] Static files directory: ${distPath}`);
+  console.log(`[STARTUP] Static files directory: ${staticPath}`);
 
-  if (!fs.existsSync(distPath)) {
-    console.error(`[STARTUP] ❌ ERROR: Static directory NOT FOUND at ${distPath}`);
-    // List files to help debug
-    try {
-      console.log(`[STARTUP] Files in ${__dirname}:`, fs.readdirSync(__dirname));
-    } catch (e) { }
+  if (!fs.existsSync(staticPath)) {
+    console.error(`[STARTUP] ❌ ERROR: Static directory NOT FOUND!`);
   } else {
     console.log(`[STARTUP] ✅ Static directory found.`);
-    const indexPath = path.resolve(distPath, "index.html");
-    if (fs.existsSync(indexPath)) {
-      console.log(`[STARTUP] ✅ index.html found.`);
-    } else {
-      console.warn(`[STARTUP] ⚠️ index.html NOT FOUND at ${indexPath}`);
-    }
   }
 
-  app.use(express.static(distPath));
+  app.use(express.static(staticPath));
 
   app.use("*", (req, res) => {
     if (req.path.startsWith("/api")) {
       return res.status(404).json({ message: "API route not found" });
     }
-    const indexPath = path.resolve(distPath, "index.html");
+    const indexPath = path.resolve(staticPath, "index.html");
     if (fs.existsSync(indexPath)) {
       res.sendFile(indexPath);
     } else {
