@@ -12,75 +12,31 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export async function serveStatic(app: Express, _server: Server) {
-  const rootDir = process.cwd();
-  const possiblePaths = [
-    path.join(rootDir, "build", "public"),
-    path.join(rootDir, "dist", "public"),
-    path.join(__dirname, "public"),
-    path.join(__dirname, "..", "dist", "public")
-  ];
+  const distPath = path.resolve(__dirname, "public");
 
-  let staticPath = "";
-  for (const p of possiblePaths) {
-    console.log(`[STARTUP] Checking path: ${p}`);
-    if (fs.existsSync(p)) {
-      staticPath = p;
-      console.log(`[STARTUP] ✅ Found static files at: ${staticPath}`);
-      break;
-    }
+  if (fs.existsSync(distPath)) {
+    app.use(express.static(distPath));
   }
 
-  if (!staticPath) {
-    console.error(`[STARTUP] ❌ ERROR: Static directory NOT FOUND in any of: ${possiblePaths.join(", ")}`);
-    // Fallback to current dir public if everything else fails
-    staticPath = path.resolve(__dirname, "public");
-  }
-
-  app.use(express.static(staticPath));
-
-  // Catch-all route for SPA
   app.use("*", (req, res) => {
-    // Log every unmatched request to help debug
-    console.log(`[ROUTING] Unmatched ${req.method} request to: ${req.originalUrl}`);
-
-    // If it's an API request that wasn't caught by registerRoutes, return JSON 404
     if (req.originalUrl.includes("/api/")) {
-      console.warn(`[ROUTING] ⚠️ API Route not found in registerRoutes: ${req.originalUrl}`);
-      return res.status(404).json({
-        message: `API endpoint not found: ${req.method} ${req.originalUrl}`,
-        note: "This usually means the route is not defined in server/routes.ts"
-      });
+      return res.status(404).json({ message: `API endpoint not found: ${req.method} ${req.originalUrl}` });
     }
-
-    const indexPath = path.join(staticPath, "index.html");
+    const indexPath = path.resolve(distPath, "index.html");
     if (fs.existsSync(indexPath)) {
       res.sendFile(indexPath);
     } else {
-      res.status(404).send("Frontend files are missing. Please ensure 'npm run build' was successful.");
+      res.status(404).send("Frontend files missing.");
     }
   });
 }
 
 (async () => {
-  console.log("-----------------------------------------");
   console.log("🚀 PRODUCTION SERVER STARTING...");
-  console.log(`📅 Time: ${new Date().toISOString()}`);
-  console.log(`🆔 Node Version: ${process.version}`);
-  console.log(`📂 Working Dir: ${process.cwd()}`);
-  console.log(`🌐 PORT: ${process.env.PORT || '5000'}`);
-
-  if (!process.env.DATABASE_URL) {
-    console.error("❌ FATAL: DATABASE_URL is missing from environment variables!");
-  } else {
-    console.log("✅ DATABASE_URL is present.");
-  }
-
   try {
     await runApp(serveStatic);
-    console.log("✅ Server components initialized successfully.");
+    console.log("✅ Server components initialized.");
   } catch (error: any) {
-    console.error("❌ FATAL ERROR DURING STARTUP:", error);
-    // Let server.cjs catch this rethrown error
-    throw error;
+    console.error("❌ STARTUP ERROR:", error);
   }
 })();
