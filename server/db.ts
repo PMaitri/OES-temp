@@ -4,11 +4,14 @@ import * as schema from "../shared/schema";
 
 console.log("🔌 Database module loading...");
 
-const dbUrl = process.env.DATABASE_URL || 'mysql://u241368025_dbadmin:School2026Secure%21@localhost/u241368025_PrepIQ';
+const defaultUrl = 'mysql://u241368025_dbadmin:School2026Secure%21@127.0.0.1/u241368025_PrepIQ';
+const dbUrl = process.env.DATABASE_URL || defaultUrl;
 
 if (!process.env.DATABASE_URL) {
-  console.warn("⚠️ WARNING: DATABASE_URL missing from environment. Using hardcoded production fallback.");
+  console.warn("⚠️ WARNING: DATABASE_URL missing from environment. Using hardcoded 127.0.0.1 fallback.");
 }
+
+console.log(`🔌 Attempting connection to: ${dbUrl.split('@')[1]}`); // Log hostname/db for debugging (masks password)
 
 let pool: any = null;
 try {
