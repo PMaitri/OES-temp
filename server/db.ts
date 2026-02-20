@@ -7,15 +7,25 @@ console.log("🔌 Database module loading...");
 const defaultUrl = 'mysql://u241368025_dbadmin:PrepIQ2026Secure@localhost/u241368025_PrepIQ';
 const dbUrl = process.env.DATABASE_URL || defaultUrl;
 
-console.log(`🔌 Preparing database connection to: ${dbUrl.split('@')[1]}`);
-
 let pool: any = null;
-try {
-  pool = mysql.createPool(dbUrl);
-  console.log("✅ Database pool created.");
-} catch (err) {
-  console.error("❌ CRITICAL: Failed to create database pool:", err);
+
+export function getDb() {
+  if (!pool) {
+    try {
+      console.log("🔌 Lazy-loading database pool...");
+      pool = mysql.createPool(dbUrl);
+    } catch (err) {
+      console.error("❌ DB Pool Error:", err);
+    }
+  }
+  return drizzle(pool, { schema, mode: 'default' });
 }
 
-export const db = drizzle(pool, { schema, mode: 'default' });
+// Export a proxy as 'db' so we don't have to change 100 files
+export const db = new Proxy({} as any, {
+  get: (target, prop) => {
+    return (getDb() as any)[prop];
+  }
+});
+
 export { pool };
