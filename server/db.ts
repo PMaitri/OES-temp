@@ -27,14 +27,17 @@ export { pool };
 // Create the drizzle instance
 const drizzleInstance = pool ? drizzle(pool, { schema, mode: 'default' }) : null;
 
-// Export a protected db object that gives clear errors if accessed while unconfigured
+// Export a protected db object that gives clear// Connection testing is handled on-demand to prevent startup crashes
 export const db = new Proxy({} as any, {
   get: (target, prop) => {
     if (drizzleInstance) {
       return (drizzleInstance as any)[prop];
     }
-    const errorMsg = `Database Error: Cannot call '.${String(prop)}' because DATABASE_URL is not configured in Hostinger settings.`;
-    console.error(errorMsg);
-    throw new Error(errorMsg);
+    // Instead of throwing, we log and return a dummy function to keep the server alive
+    console.warn(`⚠️ DATABASE WARNING: Attempted to call '.${String(prop)}' but database is not connected. Check DATABASE_URL.`);
+    return () => {
+      console.error(`❌ DATABASE REJECTED: .${String(prop)} called while disconnected.`);
+      return Promise.reject(new Error("Database not connected. Please check your Hostinger Environment Variables."));
+    };
   }
 });
