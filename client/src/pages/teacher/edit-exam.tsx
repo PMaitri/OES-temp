@@ -92,13 +92,19 @@ export default function EditExam({ params }: { params: { id: string } }) {
 
     useEffect(() => {
         if (exam) {
+            const toLocalISO = (dateStr: string) => {
+                const d = new Date(dateStr);
+                const offset = d.getTimezoneOffset() * 60000;
+                return new Date(d.getTime() - offset).toISOString().slice(0, 16);
+            };
+
             setExamData({
                 title: exam.title,
                 description: exam.description || "",
                 classId: exam.classId,
                 duration: exam.duration,
-                scheduledAt: exam.scheduledAt ? new Date(exam.scheduledAt).toISOString().slice(0, 16) : "",
-                endsAt: exam.endsAt ? new Date(exam.endsAt).toISOString().slice(0, 16) : "",
+                scheduledAt: exam.scheduledAt ? toLocalISO(exam.scheduledAt) : "",
+                endsAt: exam.endsAt ? toLocalISO(exam.endsAt) : "",
             });
 
             if (exam.classIds) {
@@ -365,6 +371,9 @@ export default function EditExam({ params }: { params: { id: string } }) {
 
         await updateExamMutation.mutateAsync({
             ...examData,
+            // Convert local input strings back to full ISO with timezone
+            scheduledAt: examData.scheduledAt ? new Date(examData.scheduledAt).toISOString() : exam.scheduledAt,
+            endsAt: examData.endsAt ? new Date(examData.endsAt).toISOString() : exam.endsAt,
             classId: selectedClassIds[0],
             classIds: selectedClassIds,
             totalMarks,

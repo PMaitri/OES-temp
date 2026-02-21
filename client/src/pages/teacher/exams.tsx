@@ -92,10 +92,14 @@ export default function TeacherExams() {
     };
 
     const formatDate = (dateString: string) => {
-        return new Date(dateString).toLocaleDateString("en-US", {
+        const d = new Date(dateString);
+        return d.toLocaleString("en-US", {
             month: "short",
             day: "numeric",
             year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true
         });
     };
 

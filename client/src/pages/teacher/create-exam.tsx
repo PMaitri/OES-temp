@@ -334,6 +334,9 @@ export default function CreateExam() {
 
     await createExamMutation.mutateAsync({
       ...examData,
+      // Convert local input strings back to full ISO with timezone
+      scheduledAt: examData.scheduledAt ? new Date(examData.scheduledAt).toISOString() : new Date().toISOString(),
+      endsAt: examData.endsAt ? new Date(examData.endsAt).toISOString() : new Date().toISOString(),
       classId: selectedClassIds[0],
       classIds: selectedClassIds,
       totalMarks,
