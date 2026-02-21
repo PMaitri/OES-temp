@@ -4,11 +4,23 @@
  * It is compatible with both ESM and CommonJS environments.
  */
 
-console.log("🚀 OES Master Boot: Starting up...");
+import fs from 'fs';
+import path from 'path';
 
-// Use dynamic import to load the compiled server bundle
-import('./build/index.js').catch(err => {
-    console.error("❌ CRITICAL: Could not load application bundle.");
-    console.error(err);
+console.log("🚀 OES Master Boot: Starting up...");
+console.log("📍 Current Dir:", process.cwd());
+
+const bundlePath = path.resolve('build/index.js');
+console.log("👀 Looking for bundle at:", bundlePath);
+
+if (fs.existsSync(bundlePath)) {
+    console.log("✅ Bundle found, importing...");
+    import('./build/index.js').catch(err => {
+        console.error("❌ CRITICAL: Error inside application bundle.");
+        console.error(err);
+        process.exit(1);
+    });
+} else {
+    console.error("❌ CRITICAL: build/index.js not found! Did the build step fail?");
     process.exit(1);
-});
+}
