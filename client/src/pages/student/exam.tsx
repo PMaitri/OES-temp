@@ -23,6 +23,8 @@ import {
 import { Clock, AlertTriangle, Check, Minus, Circle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
+import "katex/dist/katex.min.css";
+import Latex from "react-latex-next";
 
 interface Question {
   id: string;
@@ -31,6 +33,7 @@ interface Question {
   marks: number;
   orderIndex: number;
   subjectId: string | null;
+  imageData?: string | null;
   options: Array<{
     id: string;
     optionText: string;
@@ -368,9 +371,8 @@ export default function ExamPage() {
             </div>
             <div className="flex items-center gap-4">
               <div
-                className={`flex items-center gap-2 px-4 py-2 rounded-md border ${
-                  timeRemaining < 300 ? "bg-destructive/10 border-destructive" : ""
-                }`}
+                className={`flex items-center gap-2 px-4 py-2 rounded-md border ${timeRemaining < 300 ? "bg-destructive/10 border-destructive" : ""
+                  }`}
               >
                 <Clock className="w-5 h-5" />
                 <span
@@ -427,9 +429,30 @@ export default function ExamPage() {
                     </div>
 
                     <div className="mb-8">
-                      <p className="text-lg leading-relaxed" data-testid="question-text">
-                        {currentQuestion.questionText}
-                      </p>
+                      {currentQuestion.imageData ? (
+                        <div className="space-y-4">
+                          <img
+                            src={currentQuestion.imageData}
+                            alt="Question"
+                            className="max-w-full h-auto rounded-lg border shadow-sm mx-auto bg-white"
+                          />
+                          {currentQuestion.questionText && !currentQuestion.questionText.startsWith("Question ") && (
+                            <div className="text-lg leading-relaxed prose prose-slate max-w-none">
+                              <Latex>{currentQuestion.questionText}</Latex>
+                            </div>
+                          )}
+                        </div>
+                      ) : currentQuestion.questionText.startsWith("[IMAGE]") ? (
+                        <img
+                          src={currentQuestion.questionText.substring(7)}
+                          alt="Question"
+                          className="max-w-full h-auto rounded-lg border shadow-sm mx-auto bg-white"
+                        />
+                      ) : (
+                        <div className="text-lg leading-relaxed prose prose-slate max-w-none" data-testid="question-text">
+                          <Latex>{currentQuestion.questionText}</Latex>
+                        </div>
+                      )}
                     </div>
 
                     <div className="mb-8">{renderQuestionContent()}</div>

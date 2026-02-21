@@ -1,6 +1,8 @@
 import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import { db } from "./db";
+import { sql } from "drizzle-orm";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -67,6 +69,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Health check route
   app.get("/api/health-check", (_req, res) => {
     res.json({ status: "ok", timestamp: new Date().toISOString() });
+  });
+
+  // DB Upgrade Route (Admin only) - for large images
+  app.get("/api/admin/upgrade-db", authenticateToken, requireRole("admin"), async (req, res) => {
+    try {
+      console.log("🛠️ Upgrading database columns for large images...");
+      await db.execute(sql`ALTER TABLE questions MODIFY COLUMN question_text LONGTEXT`);
+      await db.execute(sql`ALTER TABLE questions MODIFY COLUMN image_data LONGTEXT`);
+      console.log("✅ Database upgrade successful.");
+      res.json({ message: "Database columns upgraded to LONGTEXT successfully." });
+    } catch (error: any) {
+      console.error("❌ Database upgrade failed:", error);
+      res.status(500).json({ message: "Upgrade failed", error: error.message });
+    }
   });
 
   // ============ AUTHENTICATION ROUTES ============
