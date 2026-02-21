@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { mysqlTable, text, varchar, int, timestamp, boolean, mysqlEnum, double } from "drizzle-orm/mysql-core";
+import { mysqlTable, text, varchar, int, timestamp, boolean, mysqlEnum, double, longtext } from "drizzle-orm/mysql-core";
 import { relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
@@ -130,8 +130,8 @@ export const questions = mysqlTable("questions", {
   id: varchar("id", { length: 36 }).primaryKey().default(sql`(UUID())`),
   examId: varchar("exam_id", { length: 36 }).notNull(),
   subjectId: varchar("subject_id", { length: 36 }),
-  questionText: text("question_text").notNull(),
-  imageData: text("image_data"),
+  questionText: longtext("question_text").notNull(),
+  imageData: longtext("image_data"),
   questionType: mysqlEnum("question_type", questionTypes).notNull(),
   marks: double("marks").notNull(),
   difficulty: varchar("difficulty", { length: 50 }),

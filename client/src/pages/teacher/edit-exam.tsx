@@ -13,7 +13,7 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { Plus, Trash2, Save, Loader2, Upload, Image as ImageIcon, Check, ChevronsUpDown, Type, FileImage } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, compressImage } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import "katex/dist/katex.min.css";
 import Latex from "react-latex-next";
@@ -178,11 +178,12 @@ export default function EditExam({ params }: { params: { id: string } }) {
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
-            if (file.size > 5 * 1024 * 1024) {
+            // Check file size (max 10MB as we will compress it anyway)
+            if (file.size > 10 * 1024 * 1024) {
                 toast({
                     variant: "destructive",
                     title: "File too large",
-                    description: "Please upload an image smaller than 5MB",
+                    description: "Please upload an image smaller than 10MB",
                 });
                 return;
             }
@@ -197,10 +198,17 @@ export default function EditExam({ params }: { params: { id: string } }) {
             }
 
             const reader = new FileReader();
-            reader.onloadend = () => {
+            reader.onloadend = async () => {
                 const base64String = reader.result as string;
-                setImagePreview(base64String);
-                setCurrentQuestion({ ...currentQuestion, questionImage: base64String });
+                try {
+                    const compressed = await compressImage(base64String);
+                    setImagePreview(compressed);
+                    setCurrentQuestion({ ...currentQuestion, questionImage: compressed });
+                } catch (error) {
+                    console.error("Compression error:", error);
+                    setImagePreview(base64String);
+                    setCurrentQuestion({ ...currentQuestion, questionImage: base64String });
+                }
             };
             reader.readAsDataURL(file);
         }
