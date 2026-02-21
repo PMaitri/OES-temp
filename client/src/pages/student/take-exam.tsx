@@ -484,17 +484,29 @@ export default function TakeExam() {
                                             onValueChange={(val) => handleOptionSelect(currentQ.id, val)}
                                             className="space-y-3"
                                         >
-                                            {currentQ.options.map((opt) => (
-                                                <div key={opt.id} className={cn(
-                                                    "flex items-center gap-3 border rounded-lg p-3 cursor-pointer transition-colors hover:bg-slate-50",
-                                                    currentAnswer?.selectedOptions?.[0] === opt.id && "border-primary bg-primary/5"
-                                                )}>
-                                                    <RadioGroupItem value={opt.id} id={opt.id} />
-                                                    <Label htmlFor={opt.id} className="flex-1 cursor-pointer font-medium text-lg">
-                                                        {opt.optionText}
-                                                    </Label>
-                                                </div>
-                                            ))}
+                                            {currentQ.options.map((opt, idx) => {
+                                                const optionLabel = String.fromCharCode(65 + idx);
+                                                const isSelected = currentAnswer?.selectedOptions?.[0] === opt.id;
+                                                return (
+                                                    <div key={opt.id} className={cn(
+                                                        "flex items-center gap-3 border rounded-lg p-3 cursor-pointer transition-all hover:bg-slate-50",
+                                                        isSelected ? "border-primary bg-primary/5 shadow-sm" : "bg-white"
+                                                    )} onClick={() => handleOptionSelect(currentQ.id, opt.id)}>
+                                                        <RadioGroupItem value={opt.id} id={opt.id} className="sr-only" />
+                                                        <div className={cn(
+                                                            "w-10 h-10 rounded-full border-2 flex items-center justify-center text-lg font-bold transition-colors",
+                                                            isSelected
+                                                                ? "bg-primary border-primary text-white"
+                                                                : "border-slate-200 bg-slate-50 text-slate-600"
+                                                        )}>
+                                                            {optionLabel}
+                                                        </div>
+                                                        <Label htmlFor={opt.id} className="flex-1 cursor-pointer font-medium text-lg text-slate-700">
+                                                            {opt.optionText}
+                                                        </Label>
+                                                    </div>
+                                                );
+                                            })}
                                         </RadioGroup>
                                     )}
                                 </div>

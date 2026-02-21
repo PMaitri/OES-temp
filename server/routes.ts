@@ -873,7 +873,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             questionText = questionText.substring(splitPos + 2);
           } else {
             imageData = questionText.substring(7);
-            questionText = `Question ${i + 1}`;
+            questionText = "";
           }
         }
 

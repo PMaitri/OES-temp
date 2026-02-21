@@ -856,24 +856,32 @@ export default function CreateExam() {
                               </span>
                             </div>
 
-                            {q.type === 'image' ? (
+                            {q.type === 'image' && (
                               <img
                                 src={q.questionImage}
                                 alt={`Question ${index + 1}`}
-                                className="w-full rounded-md border max-h-48 object-contain bg-slate-50"
+                                className="w-full rounded-md border max-h-48 object-contain bg-slate-50 mb-3"
                               />
-                            ) : (
-                              <div className="p-3 bg-muted/30 rounded-md text-sm">
-                                <p className="font-medium line-clamp-2 mb-2">{q.questionText}</p>
+                            )}
+
+                            <div className="p-3 bg-muted/30 rounded-md text-sm">
+                              {q.type !== 'image' && <p className="font-medium line-clamp-2 mb-2">{q.questionText}</p>}
+                              {q.type !== 'numeric' && (
                                 <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground">
                                   {q.options.map((opt, i) => (
-                                    <div key={i} className={cn("truncate", q.correctAnswer === String.fromCharCode(65 + i) && "text-primary font-medium")}>
-                                      {String.fromCharCode(65 + i)}. {opt}
+                                    <div key={i} className={cn("truncate flex items-center gap-1", q.correctAnswer === String.fromCharCode(65 + i) && "text-primary font-bold")}>
+                                      <span className={cn(
+                                        "w-5 h-5 rounded-full border flex items-center justify-center text-[10px]",
+                                        q.correctAnswer === String.fromCharCode(65 + i) ? "bg-primary border-primary text-white" : "bg-background"
+                                      )}>
+                                        {String.fromCharCode(65 + i)}
+                                      </span>
+                                      {opt}
                                     </div>
                                   ))}
                                 </div>
-                              </div>
-                            )}
+                              )}
+                            </div>
                           </div>
                         </div>
                       ))}
