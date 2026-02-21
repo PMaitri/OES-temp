@@ -500,18 +500,18 @@ export default function CreateExam() {
             </CardHeader>
             <CardContent className="space-y-6">
               <Tabs value={activeTab} onValueChange={(val: any) => setActiveTab(val)} className="w-full">
-                <TabsList className="grid w-full grid-cols-2 mb-6">
-                  <TabsTrigger value="image" className="flex gap-2">
-                    <FileImage className="w-4 h-4" />
-                    Image Based
-                  </TabsTrigger>
+                <TabsList className="grid w-full grid-cols-3 mb-6">
                   <TabsTrigger value="text" className="flex gap-2">
                     <Type className="w-4 h-4" />
-                    Text Based
+                    Multiple Choice
                   </TabsTrigger>
                   <TabsTrigger value="numeric" className="flex gap-2">
                     <Type className="w-4 h-4" />
                     Numeric
+                  </TabsTrigger>
+                  <TabsTrigger value="image" className="flex gap-2 opacity-50">
+                    <FileImage className="w-4 h-4" />
+                    Archive
                   </TabsTrigger>
                 </TabsList>
 
@@ -552,18 +552,57 @@ export default function CreateExam() {
                   </TabsContent>
 
                   <TabsContent value="text" className="mt-0 space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="question-text">Question Text *</Label>
-                      <Textarea
-                        id="question-text"
-                        placeholder="Type your question here..."
-                        value={currentQuestion.questionText}
-                        onChange={(e) => setCurrentQuestion({ ...currentQuestion, questionText: e.target.value })}
-                        rows={3}
-                        className="text-lg"
-                      />
+                    <div className="space-y-4 border rounded-lg p-4 bg-accent/10">
+                      <Label className="text-base font-semibold">Question Content</Label>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="question-text">Question Text (Optional if image provided)</Label>
+                        <Textarea
+                          id="question-text"
+                          placeholder="Type your question here..."
+                          value={currentQuestion.questionText}
+                          onChange={(e) => setCurrentQuestion({ ...currentQuestion, questionText: e.target.value })}
+                          rows={3}
+                          className="text-lg bg-white"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label>Question Image (Optional)</Label>
+                        <div className="border-2 border-dashed rounded-lg p-4 text-center hover:border-primary transition-colors bg-white">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageUpload}
+                            className="hidden"
+                            id="mcq-question-image"
+                          />
+                          <label htmlFor="mcq-question-image" className="cursor-pointer">
+                            {imagePreview ? (
+                              <div className="space-y-2">
+                                <img
+                                  src={imagePreview}
+                                  alt="Question preview"
+                                  className="max-h-48 mx-auto rounded-lg shadow-md"
+                                />
+                                <Button type="button" variant="outline" size="sm" onClick={(e) => {
+                                  e.preventDefault();
+                                  setImagePreview(null);
+                                  setCurrentQuestion({ ...currentQuestion, questionImage: null });
+                                }}>Remove Image</Button>
+                              </div>
+                            ) : (
+                              <div className="space-y-2 py-4">
+                                <Upload className="w-8 h-8 mx-auto text-muted-foreground" />
+                                <p className="text-sm font-medium">Add Image to Question</p>
+                              </div>
+                            )}
+                          </label>
+                        </div>
+                      </div>
+
                       {currentQuestion.questionText && (
-                        <div className="mt-2 p-4 bg-muted/30 rounded-md border min-h-[60px]">
+                        <div className="mt-2 p-4 bg-white rounded-md border min-h-[60px]">
                           <Label className="text-xs text-muted-foreground mb-2 block">Preview (LaTeX supported):</Label>
                           <div className="prose prose-sm max-w-none">
                             <Latex>{currentQuestion.questionText}</Latex>
@@ -592,18 +631,57 @@ export default function CreateExam() {
                   </TabsContent>
 
                   <TabsContent value="numeric" className="mt-0 space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="numeric-question-text">Question Text *</Label>
-                      <Textarea
-                        id="numeric-question-text"
-                        placeholder="Type your numeric question here..."
-                        value={currentQuestion.questionText}
-                        onChange={(e) => setCurrentQuestion({ ...currentQuestion, questionText: e.target.value })}
-                        rows={3}
-                        className="text-lg"
-                      />
+                    <div className="space-y-4 border rounded-lg p-4 bg-accent/10">
+                      <Label className="text-base font-semibold">Question Content</Label>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="numeric-question-text">Question Text (Optional if image provided)</Label>
+                        <Textarea
+                          id="numeric-question-text"
+                          placeholder="Type your numeric question here..."
+                          value={currentQuestion.questionText}
+                          onChange={(e) => setCurrentQuestion({ ...currentQuestion, questionText: e.target.value })}
+                          rows={3}
+                          className="text-lg bg-white"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label>Question Image (Optional)</Label>
+                        <div className="border-2 border-dashed rounded-lg p-4 text-center hover:border-primary transition-colors bg-white">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageUpload}
+                            className="hidden"
+                            id="numeric-question-image"
+                          />
+                          <label htmlFor="numeric-question-image" className="cursor-pointer">
+                            {imagePreview ? (
+                              <div className="space-y-2">
+                                <img
+                                  src={imagePreview}
+                                  alt="Question preview"
+                                  className="max-h-48 mx-auto rounded-lg shadow-md"
+                                />
+                                <Button type="button" variant="outline" size="sm" onClick={(e) => {
+                                  e.preventDefault();
+                                  setImagePreview(null);
+                                  setCurrentQuestion({ ...currentQuestion, questionImage: null });
+                                }}>Remove Image</Button>
+                              </div>
+                            ) : (
+                              <div className="space-y-2 py-4">
+                                <Upload className="w-8 h-8 mx-auto text-muted-foreground" />
+                                <p className="text-sm font-medium">Add Image to Question</p>
+                              </div>
+                            )}
+                          </label>
+                        </div>
+                      </div>
+
                       {currentQuestion.questionText && (
-                        <div className="mt-2 p-4 bg-muted/30 rounded-md border min-h-[60px]">
+                        <div className="mt-2 p-4 bg-white rounded-md border min-h-[60px]">
                           <Label className="text-xs text-muted-foreground mb-2 block">Preview (LaTeX supported):</Label>
                           <div className="prose prose-sm max-w-none">
                             <Latex>{currentQuestion.questionText}</Latex>
