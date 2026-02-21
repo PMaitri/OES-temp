@@ -137,7 +137,7 @@ export default function CreateExam() {
       toast({
         variant: "destructive",
         title: "Failed to create exam",
-        description: "Please try again",
+        description: error.message || "Please try again",
       });
     },
   });
@@ -199,10 +199,10 @@ export default function CreateExam() {
     }
 
     if (activeTab === "text") {
-      if (!currentQuestion.questionText.trim()) {
+      if (!currentQuestion.questionText.trim() && !currentQuestion.questionImage) {
         toast({
           variant: "destructive",
-          title: "Question text is required",
+          title: "Question text or image is required",
         });
         return;
       }
@@ -210,17 +210,17 @@ export default function CreateExam() {
         toast({
           variant: "destructive",
           title: "All options are required",
-          description: "Please text for all options A, B, C, and D",
+          description: "Please provide text for all options A, B, C, and D",
         });
         return;
       }
     }
 
     if (activeTab === "numeric") {
-      if (!currentQuestion.questionText.trim()) {
+      if (!currentQuestion.questionText.trim() && !currentQuestion.questionImage) {
         toast({
           variant: "destructive",
-          title: "Question text is required",
+          title: "Question text or image is required",
         });
         return;
       }
@@ -274,36 +274,36 @@ export default function CreateExam() {
 
     // Convert to backend format
     const formattedQuestions = questions.map((q) => {
-      if (q.type === "image") {
+      // If image exists, ensure it's sent to the backend.
+      // The backend looks for [IMAGE] prefix or imageData property.
+      // We will use the [IMAGE] prefix for backward compatibility with the current route.
+      const questionText = q.questionImage
+        ? `[IMAGE]${q.questionImage}${q.questionText ? `\n\n${q.questionText}` : ""}`
+        : q.questionText;
+
+      if (q.type === "text" || q.type === "image") {
         return {
-          questionText: `[IMAGE]${q.questionImage}`,
+          questionText: questionText,
           questionType: "mcq",
           marks: q.marks,
           negativeMarks: q.negativeMarks,
           difficulty: "medium",
           subjectId: "",
           options: [
-            { text: "A", isCorrect: q.correctAnswer === "A" },
-            { text: "B", isCorrect: q.correctAnswer === "B" },
-            { text: "C", isCorrect: q.correctAnswer === "C" },
-            { text: "D", isCorrect: q.correctAnswer === "D" },
+            { text: q.options[0], isCorrect: q.correctAnswer === "A" },
+            { text: q.options[1], isCorrect: q.correctAnswer === "B" },
+            { text: q.options[2], isCorrect: q.correctAnswer === "C" },
+            { text: q.options[3], isCorrect: q.correctAnswer === "D" },
           ],
         };
       } else if (q.type === "numeric") {
         return {
-          questionText: q.questionText,
+          questionText: questionText,
           questionType: "numeric",
           marks: q.marks,
           negativeMarks: q.negativeMarks,
           difficulty: "medium",
           subjectId: "",
-          // But backend schema has numericAnswers table.
-          // We need to pass it in a way the backend understands. 
-          // Previous backend update suggests we need to handle this.
-          // Actually, let's check backend route.
-          // The backend route createExam calls storage.createQuestion.
-          // We also need to send the numeric answer.
-          // Let's assume we pass it as 'numericAnswer' in the question object.
           numericAnswer: Number(q.numericAnswer),
           tolerance: Number(q.tolerance || 0),
         };

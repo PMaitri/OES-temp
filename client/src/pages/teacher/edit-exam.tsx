@@ -231,10 +231,10 @@ export default function EditExam({ params }: { params: { id: string } }) {
         }
 
         if (activeTab === "text") {
-            if (!currentQuestion.questionText.trim()) {
+            if (!currentQuestion.questionText.trim() && !currentQuestion.questionImage) {
                 toast({
                     variant: "destructive",
-                    title: "Question text is required",
+                    title: "Question text or image is required",
                 });
                 return;
             }
@@ -249,10 +249,10 @@ export default function EditExam({ params }: { params: { id: string } }) {
         }
 
         if (activeTab === "numeric") {
-            if (!currentQuestion.questionText.trim()) {
+            if (!currentQuestion.questionText.trim() && !currentQuestion.questionImage) {
                 toast({
                     variant: "destructive",
-                    title: "Question text is required",
+                    title: "Question text or image is required",
                 });
                 return;
             }
@@ -319,24 +319,29 @@ export default function EditExam({ params }: { params: { id: string } }) {
         const totalMarks = questions.reduce((sum, q) => sum + q.marks, 0);
 
         const formattedQuestions = questions.map((q) => {
-            if (q.type === "image") {
+            // Include image data with backward compatibility prefix [IMAGE]
+            const questionText = q.questionImage
+                ? `[IMAGE]${q.questionImage}${q.questionText ? `\n\n${q.questionText}` : ""}`
+                : q.questionText;
+
+            if (q.type === "text" || q.type === "image") {
                 return {
-                    questionText: `[IMAGE]${q.questionImage}`,
+                    questionText: questionText,
                     questionType: "mcq",
                     marks: q.marks,
                     negativeMarks: q.negativeMarks,
                     difficulty: "medium",
                     subjectId: "",
                     options: [
-                        { text: "A", isCorrect: q.correctAnswer === "A" },
-                        { text: "B", isCorrect: q.correctAnswer === "B" },
-                        { text: "C", isCorrect: q.correctAnswer === "C" },
-                        { text: "D", isCorrect: q.correctAnswer === "D" },
+                        { text: q.options[0], isCorrect: q.correctAnswer === "A" },
+                        { text: q.options[1], isCorrect: q.correctAnswer === "B" },
+                        { text: q.options[2], isCorrect: q.correctAnswer === "C" },
+                        { text: q.options[3], isCorrect: q.correctAnswer === "D" },
                     ],
                 };
             } else if (q.type === "numeric") {
                 return {
-                    questionText: q.questionText,
+                    questionText: questionText,
                     questionType: "numeric",
                     marks: q.marks,
                     negativeMarks: q.negativeMarks,
@@ -345,21 +350,9 @@ export default function EditExam({ params }: { params: { id: string } }) {
                     numericAnswer: Number(q.numericAnswer),
                     tolerance: Number(q.tolerance || 0),
                 };
-            } else {
-                return {
-                    questionText: q.questionText,
-                    questionType: "mcq",
-                    marks: q.marks,
-                    negativeMarks: q.negativeMarks,
-                    difficulty: "medium",
-                    subjectId: "",
-                    options: q.options.map((optText, idx) => ({
-                        text: optText,
-                        isCorrect: q.correctAnswer === String.fromCharCode(65 + idx),
-                    })),
-                };
             }
-        });
+            return null;
+        }).filter(Boolean);
 
         if (selectedClassIds.length === 0) {
             toast({

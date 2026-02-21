@@ -862,14 +862,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Create questions
       for (let i = 0; i < questions.length; i++) {
         const q = questions[i];
-
-        // Extract image data if questionText starts with [IMAGE]
         let questionText = q.questionText || "";
-        let imageData = null;
+        let imageData = q.imageData || q.questionImage || null;
 
-        if (questionText.startsWith("[IMAGE]")) {
-          imageData = questionText.substring(7);
-          questionText = `Question ${i + 1}`;
+        // Legacy check for [IMAGE] prefix if imageData is not directly provided
+        if (!imageData && typeof questionText === 'string' && questionText.startsWith("[IMAGE]")) {
+          const splitPos = questionText.indexOf("\n\n");
+          if (splitPos !== -1) {
+            imageData = questionText.substring(7, splitPos);
+            questionText = questionText.substring(splitPos + 2);
+          } else {
+            imageData = questionText.substring(7);
+            questionText = `Question ${i + 1}`;
+          }
         }
 
         const question = await storage.createQuestion({
@@ -909,9 +914,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       console.log("Exam created successfully with", questions.length, "questions");
       res.json({ message: "Exam created successfully", exam });
-    } catch (error) {
-      console.error("Error creating exam:", error);
-      res.status(500).json({ message: "Server error" });
+    } catch (error: any) {
+      console.error("❌ ERROR CREATING EXAM:", error);
+      res.status(500).json({
+        message: "Failed to create exam",
+        detail: error.message,
+        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      });
     }
   });
 
@@ -975,11 +984,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
         for (let i = 0; i < questions.length; i++) {
           const q = questions[i];
           let questionText = q.questionText || "";
-          let imageData = null;
+          let imageData = q.imageData || q.questionImage || null;
 
-          if (questionText.startsWith("[IMAGE]")) {
-            imageData = questionText.substring(7);
-            questionText = `Question ${i + 1}`;
+          // Legacy check for [IMAGE] prefix
+          if (!imageData && typeof questionText === 'string' && questionText.startsWith("[IMAGE]")) {
+            const splitPos = questionText.indexOf("\n\n");
+            if (splitPos !== -1) {
+              imageData = questionText.substring(7, splitPos);
+              questionText = questionText.substring(splitPos + 2);
+            } else {
+              imageData = questionText.substring(7);
+              questionText = `Question ${i + 1}`;
+            }
           }
 
           const question = await storage.createQuestion({
