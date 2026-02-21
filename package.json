@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "cross-env NODE_ENV=development tsx server/index-dev.ts",
-    "build": "node -e \"require('fs').mkdirSync('build', {recursive: true})\" && vite build && esbuild server/index-prod.ts --platform=node --bundle --format=esm --packages=external --outfile=build/index.js && tsx scripts/post-build.ts",
+    "build": "node -e \"require('fs').mkdirSync('build', {recursive: true})\" && npx vite build && npx esbuild server/index-prod.ts --platform=node --bundle --format=esm --packages=external --outfile=build/index.js && npx tsx scripts/post-build.ts",
     "start": "node server.cjs",
     "check": "tsc",
     "db:push": "drizzle-kit push",
