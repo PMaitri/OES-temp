@@ -18,10 +18,18 @@ async function start() {
         // Simple health check for Hostinger
         app.get('/_health', (req, res) => res.status(200).send('HEALTHY'));
 
-        // Root redirect/fallback if bundle hasn't loaded yet
-        app.get('/', (req, res, next) => {
-            if (global.appLoaded) return next();
-            res.status(503).send('<h1>OES is starting up...</h1><p>Please refresh in a few seconds.</p><script>setTimeout(()=>location.reload(), 3000)</script>');
+        // Root bridge: Forward ALL requests to the main app if it's loaded
+        app.use((req, res, next) => {
+            if (global.mainApp) {
+                // If mainApp exists, it's an express instance. Call it.
+                return global.mainApp(req, res, next);
+            }
+
+            // Fallback while loading
+            if (req.path === '/' || !req.path.startsWith('/api')) {
+                return res.status(503).send('<h1>OES is starting up...</h1><p>Please refresh in a few seconds.</p><script>setTimeout(()=>location.reload(), 3000)</script>');
+            }
+            res.status(503).json({ message: "OES is starting up. Please try again in a few seconds." });
         });
 
         const server = app.listen(port, () => {

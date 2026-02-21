@@ -22,6 +22,7 @@ export function log(message: string, source = "express") {
 }
 
 export const app = express();
+(global as any).mainApp = app;
 
 declare module 'http' {
   interface IncomingMessage {
