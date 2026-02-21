@@ -160,7 +160,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         fullName,
         role: role || "student",
         studentId: role === "student" ? studentId : undefined,
-      });
+      } as any);
 
       // If student and classId provided, enroll them
       if (role === "student" && classId) {
@@ -169,7 +169,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             studentId: user.id,
             classId,
             rollNumber: rollNumber ? parseInt(rollNumber) : undefined
-          });
+          } as any);
         } catch (enrollError: any) {
           console.error("Enrollment error during registration:", enrollError);
           // We don't fail registration if enrollment fails, but we might want to warn
@@ -221,7 +221,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         fullName: "System Administrator",
         email: "admin@school.com",
         role: "admin"
-      });
+      } as any);
 
       res.json({
         message: "Admin account created successfully",
@@ -387,7 +387,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Class name is required" });
       }
 
-      const newClass = await storage.createClass({ name, section, description });
+      const newClass = await storage.createClass({ name, section, description } as any);
       res.json(newClass);
     } catch (error) {
       console.error("Error creating class:", error);
@@ -424,14 +424,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Subject name is required" });
       }
 
-      const newSubject = await storage.createSubject({ name, description });
+      const newSubject = await storage.createSubject({ name, description } as any);
 
       // Auto-assign to class if provided
       if (classId) {
         await storage.assignSubjectToClass({
           classId,
           subjectId: newSubject.id
-        });
+        } as any);
       }
 
       res.json(newSubject);
@@ -488,7 +488,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         password: hashedPassword,
         fullName,
         role: "teacher",
-      });
+      } as any);
 
       res.json(teacher);
     } catch (error) {
@@ -535,7 +535,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         fullName,
         role: "student",
         studentId,
-      });
+      } as any);
 
       res.json(student);
     } catch (error) {
@@ -599,7 +599,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const results = [];
         for (const cid of classIds) {
           try {
-            const assignment = await storage.assignTeacherToClass({ teacherId, classId: cid, subjectId });
+            const assignment = await storage.assignTeacherToClass({ teacherId, classId: cid, subjectId } as any);
             results.push(assignment);
           } catch (e: any) {
             // Ignore "already assigned" errors for batch operations, just continue
@@ -612,7 +612,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Handle single class (legacy support)
-      const assignment = await storage.assignTeacherToClass({ teacherId, classId, subjectId });
+      const assignment = await storage.assignTeacherToClass({ teacherId, classId, subjectId } as any);
       res.json(assignment);
     } catch (error: any) {
       console.error("Error assigning teacher:", error);
@@ -660,7 +660,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         studentId,
         classId,
         rollNumber: rollNumber ? parseInt(rollNumber) : undefined
-      });
+      } as any);
       res.json(enrollment);
     } catch (error: any) {
       console.error("Error enrolling student:", error);
@@ -881,13 +881,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
           examId: exam.id,
           questionText,
           imageData,
-          questionType: q.questionType || "mcq",
+          questionType: (q.questionType || "mcq") as any,
           marks: q.marks || 1,
           negativeMarks: q.negativeMarks || 0,
           difficulty: q.difficulty || "medium",
           subjectId: q.subjectId || null,
           orderIndex: i,
-        });
+        } as any);
 
         // Create options for MCQ/MSQ/True-False
         if (q.options && q.options.length > 0) {
@@ -898,7 +898,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
               optionText: opt.text || "",
               isCorrect: opt.isCorrect || false,
               orderIndex: j,
-            });
+            } as any);
           }
         }
 
@@ -908,7 +908,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             questionId: question.id,
             correctAnswer: q.numericAnswer,
             tolerance: q.tolerance !== undefined ? q.tolerance : null,
-          });
+          } as any);
         }
       }
 
@@ -1002,13 +1002,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
             examId: exam.id,
             questionText,
             imageData,
-            questionType: q.questionType || "mcq",
+            questionType: (q.questionType || "mcq") as any,
             marks: q.marks || 1,
             negativeMarks: q.negativeMarks || 0,
             difficulty: q.difficulty || "medium",
             subjectId: q.subjectId || null,
             orderIndex: i,
-          });
+          } as any);
 
           if (q.options && q.options.length > 0) {
             for (let j = 0; j < q.options.length; j++) {
@@ -1018,7 +1018,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 optionText: opt.text || "",
                 isCorrect: opt.isCorrect || false,
                 orderIndex: j,
-              });
+              } as any);
             }
           }
 
@@ -1027,7 +1027,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
               questionId: question.id,
               correctAnswer: q.numericAnswer,
               tolerance: q.tolerance !== undefined ? q.tolerance : null,
-            });
+            } as any);
           }
         }
       }
@@ -1090,7 +1090,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const updatedExam = await storage.updateExam(examId, {
         isPublished: false,
         status: "draft"
-      });
+      } as any);
 
       console.log("Exam unpublished:", examId);
       res.json({ message: "Exam unpublished successfully", exam: updatedExam });
@@ -1250,7 +1250,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           examId,
           studentId,
           isSubmitted: false,
-        });
+        } as any);
       }
 
       res.json({ message: "Exam started" });
@@ -1354,10 +1354,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         await storage.createOrUpdateStudentAnswer({
           attemptId: attempt.id,
           questionId: answer.questionId,
-          selectedOptions: answer.selectedOptions,
+          selectedOptions: answer.selectedOptions ? (Array.isArray(answer.selectedOptions) ? answer.selectedOptions.join(',') : answer.selectedOptions) : null,
           isCorrect: false,
           marksAwarded: 0,
-        });
+        } as any);
 
         // Check if correct (MCQ or Numeric)
         if (question.questionType === "mcq") {
@@ -1394,11 +1394,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         await storage.createOrUpdateStudentAnswer({
           attemptId: attempt.id,
           questionId: answer.questionId,
-          selectedOptions: answer.selectedOptions,
-          numericAnswer: answer.numericAnswer, // Added numericAnswer field
+          selectedOptions: answer.selectedOptions ? (Array.isArray(answer.selectedOptions) ? answer.selectedOptions.join(',') : answer.selectedOptions) : null,
+          numericAnswer: answer.numericAnswer,
           isCorrect,
           marksAwarded,
-        });
+        } as any);
       }
 
       // Calculate percentage
@@ -1413,7 +1413,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         totalScore,
         percentage,
         isPassed,
-      });
+      } as any);
 
       res.json({
         message: "Exam submitted successfully",

@@ -726,29 +726,32 @@ export default function CreateExam() {
                       <Label>Correct Answer *</Label>
                       <RadioGroup
                         value={currentQuestion.correctAnswer}
-                        onValueChange={(value: any) =>
-                          setCurrentQuestion({ ...currentQuestion, correctAnswer: value })
+                        onValueChange={(val) =>
+                          setCurrentQuestion({ ...currentQuestion, correctAnswer: val as any })
                         }
                         className="grid grid-cols-4 gap-4"
                       >
                         {["A", "B", "C", "D"].map((option) => (
-                          <div
-                            key={option}
-                            className={cn(
-                              "border rounded-lg transition-colors bg-white",
-                              currentQuestion.correctAnswer === option
-                                ? "bg-primary/5 border-primary"
-                                : "hover:bg-accent"
-                            )}
-                          >
+                          <div key={option} className="flex items-center">
+                            <RadioGroupItem value={option} id={`correct-${option}`} className="sr-only" />
                             <Label
-                              htmlFor={`option-${option}`}
-                              className="flex items-center space-x-2 p-4 cursor-pointer w-full h-full"
+                              htmlFor={`correct-${option}`}
+                              className={cn(
+                                "flex-1 py-4 border-2 rounded-xl cursor-pointer transition-all font-black text-center text-xl",
+                                currentQuestion.correctAnswer === option
+                                  ? "border-primary bg-primary/10 text-primary ring-2 ring-primary/20"
+                                  : "border-slate-200 bg-white text-slate-400 hover:border-slate-300 hover:bg-slate-50"
+                              )}
                             >
-                              <RadioGroupItem value={option} id={`option-${option}`} />
-                              <span className="text-xl font-bold flex-1 text-center">
-                                {option}
-                              </span>
+                              <div className="flex items-center justify-center gap-2">
+                                <div className={cn(
+                                  "w-5 h-5 rounded-full border-2 flex items-center justify-center",
+                                  currentQuestion.correctAnswer === option ? "border-primary" : "border-slate-300"
+                                )}>
+                                  {currentQuestion.correctAnswer === option && <div className="w-2.5 h-2.5 rounded-full bg-primary" />}
+                                </div>
+                                <span>{option}</span>
+                              </div>
                             </Label>
                           </div>
                         ))}
@@ -920,7 +923,7 @@ export default function CreateExam() {
             </Button>
           </div>
         </form>
-      </main>
-    </div>
+      </main >
+    </div >
   );
 }
