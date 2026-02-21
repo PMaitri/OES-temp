@@ -37,8 +37,9 @@ export async function serveStatic(app: Express, _server: Server) {
     // If we are running inside server.cjs, we might not want to call listen() again.
     // However, our current structure requires runApp to set up the routes.
     await runApp(serveStatic);
-    console.log("✅ Application routes and static files initialized.");
+    console.log("🚀 MAIN APP: Routes and static files initialized.");
   } catch (error: any) {
-    console.error("❌ BUNDLE ERROR:", error);
+    console.error("❌ MAIN APP BUNDLE ERROR:", error.message);
+    if (error.stack) console.error(error.stack);
   }
 })();
