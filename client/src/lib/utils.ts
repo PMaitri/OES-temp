@@ -5,7 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export async function compressImage(base64Str: string, maxWidth = 1200, maxHeight = 1200, quality = 0.7): Promise<string> {
+export async function compressImage(base64Str: string, maxWidth = 800, maxHeight = 800, quality = 0.4): Promise<string> {
   return new Promise((resolve) => {
     const img = new Image();
     img.src = base64Str;
@@ -29,7 +29,12 @@ export async function compressImage(base64Str: string, maxWidth = 1200, maxHeigh
       canvas.width = width;
       canvas.height = height;
       const ctx = canvas.getContext('2d');
-      ctx?.drawImage(img, 0, 0, width, height);
+      // Use white background for JPEGs to avoid black transparency
+      if (ctx) {
+        ctx.fillStyle = "#FFFFFF";
+        ctx.fillRect(0, 0, width, height);
+        ctx.drawImage(img, 0, 0, width, height);
+      }
       resolve(canvas.toDataURL('image/jpeg', quality));
     };
   });
