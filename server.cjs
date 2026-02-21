@@ -134,8 +134,23 @@ async function start() {
                     debugLog(err.stack);
                 });
             } else {
-                bundleError = new Error(`Application bundle not found. Possible causes: 1. Build command failed, 2. Output directory moved. Files in root: ${fs.readdirSync(process.cwd()).join(', ')}`);
-                debugLog("❌ ERROR: Main app bundle not found.");
+                debugLog("⚠️ Bundle missing. Attempting emergency build...");
+                try {
+                    const { execSync } = require('child_process');
+                    debugLog("🏗️ Running 'npm run build'...");
+                    const output = execSync('npm run build', { encoding: 'utf8' });
+                    debugLog("✅ Emergency build output: " + output.substring(0, 500) + "...");
+
+                    if (fs.existsSync(resolve(__dirname, 'build', 'index.js'))) {
+                        debugLog("🚀 Success! Bundle created. Restarting...");
+                        process.exit(0); // Hostinger will restart the process and find the bundle
+                    } else {
+                        throw new Error("Build command finished but build/index.js is still missing.");
+                    }
+                } catch (e) {
+                    bundleError = new Error(`Emergency build failed: ${e.message}. Files in root: ${fs.readdirSync(process.cwd()).join(', ')}`);
+                    debugLog("❌ EMERGENCY BUILD FAILED.");
+                }
             }
         });
 
