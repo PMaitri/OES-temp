@@ -158,12 +158,11 @@ export default function Register() {
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="rollNumber">Roll Number (1-70)</Label>
+                    <Label htmlFor="rollNumber">Roll Number</Label>
                     <Input
                       id="rollNumber"
                       type="number"
                       min="1"
-                      max="70"
                       placeholder="e.g. 15"
                       value={formData.rollNumber}
                       onChange={(e) => setFormData({ ...formData, rollNumber: e.target.value })}

@@ -636,8 +636,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Student ID and Class ID are required" });
       }
 
-      if (rollNumber && (rollNumber < 1 || rollNumber > 50)) {
-        return res.status(400).json({ message: "Roll number must be between 1 and 50" });
+      if (rollNumber && rollNumber < 1) {
+        return res.status(400).json({ message: "Roll number must be at least 1" });
       }
 
       const enrollment = await storage.enrollStudent({
