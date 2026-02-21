@@ -4,7 +4,7 @@ import * as schema from "../shared/schema";
 
 console.log("🔌 Database module loading...");
 
-const defaultUrl = 'mysql://u241368025_dbadmin:PrepIQ2026Secure@localhost/u241368025_PrepIQ';
+const defaultUrl = 'mysql://u241368025_dbadmin:School2026Secure%21@localhost/u241368025_PrepIQ';
 const dbUrl = process.env.DATABASE_URL || defaultUrl;
 
 let pool: any = null;
