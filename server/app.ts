@@ -88,10 +88,22 @@ export default async function runApp(
   // We only call listen() if the server isn't already active.
   if (!server.listening) {
     const port = parseInt(process.env.PORT || '3000', 10);
-    server.listen(port, "0.0.0.0", () => {
-      log(`serving on port ${port}`);
+    server.on('error', (e: any) => {
+      if (e.code === 'EADDRINUSE') {
+        log(`Port ${port} already used. Assuming master process handled it.`);
+      } else {
+        log(`Server error: ${e.message}`);
+      }
     });
+
+    try {
+      server.listen(port, "0.0.0.0", () => {
+        log(`serving on port ${port}`);
+      });
+    } catch (e: any) {
+      log(`Listen failed: ${e.message}`);
+    }
   } else {
-    log("Server is already listening (managed by entry point).");
+    log("Server is already listening.");
   }
 }
